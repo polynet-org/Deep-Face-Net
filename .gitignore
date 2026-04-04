@@ -1,4 +1,3 @@
-# Byte-compiled / optimized / DLL files
 __pycache__/
 
 # Distribution / packaging
@@ -70,13 +69,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# IDEs
 .vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
 
 # Models
 models/*
@@ -94,21 +87,3 @@ tmp/
 
 # User settings
 .deepfacenet_settings.json
-
-# Testing files (keep directory structure)
-testing/
-
-# Assets (if you want to exclude large files)
-assets/*.mp4
-assets/*.avi
-
-# Cloned dependency folders (GFPGAN, BasicSR cloned locally)
-gfpgan/
-GFPGAN/
-BasicSR/
-basicsr/
-
-# Model weight files anywhere in the tree
-*.pth
-*.pkl
-*.safetensors

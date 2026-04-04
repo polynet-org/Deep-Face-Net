@@ -67,7 +67,7 @@ setup(
     include_package_data=True,
     keywords="deepfake face-swap face-swapping insightface onnx computer-vision ai",
     project_urls={
-        "Bug Reports": "https://github.com/MIDHUNGRAJ/Deep-Face-Net/issues",
-        "Source": "https://github.com/MIDHUNGRAJ/Deep-Face-Net",
+        "Bug Reports": "https://github.com/polynet-org/Deep-Face-Net/issues",
+        "Source": "https://github.com/polynet-org/Deep-Face-Net",
     },
 )
