@@ -1,7 +1,8 @@
 # Deep Face Net
 
 <div align="center">
-<img width="150" height="150" alt="logo" src="https://github.com/user-attachments/assets/53e79f4c-ba3d-4589-b8b6-5f33fbcbd92d" />
+<img width="150" height="150" alt="icon" src="https://github.com/user-attachments/assets/8fa8358b-3cb4-4cf9-aa63-15004191cd26" />
+
 </div>
 
 <div align="center">
