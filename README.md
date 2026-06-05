@@ -33,20 +33,6 @@
 
 ---
 
-## 💎 Premium Version
-
-This is the free version. Deep Face Net Premium unlocks advanced capabilities designed for professionals.
-
-### Premium Features
-- 🔁 Multi-face swapping in videos
-- 🎬 High-quality studio-level output
-- ⚡ Optimized performance pipeline
-- 🧠 Advanced face tracking and consistency
-
-👉 Get Premium: https://www.polynet.online
-
----
-
 ## Requirements
 
 - **Python**: 3.8 or higher
