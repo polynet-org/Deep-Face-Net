@@ -29,7 +29,7 @@
 
 - GUI (PyQt6 dark theme) and CLI support
 - Live webcam face swapping with multiple camera support
-- Offline face swap for images and videos
+- Offline face swap for images and videos with multi-face support
 - Three processing modes: **Swap Only**, **Enhance Only** (GFPGAN, no source needed), **Swap + Enhance**
 - Virtual camera output for OBS, Zoom, Discord (optional)
 - Mouth mask to preserve natural mouth movements
@@ -48,35 +48,36 @@
 
 ## Installation
 
-> [!IMPORTANT]
-> **GPU support requires running from source.** For the best performance with NVIDIA GPU acceleration, follow the **Run from Source** instructions below. Pre-built releases run on CPU only.
-
 > [!NOTE]
-> **Pre-Trained AI Models Required**: Deep Face Net needs model weights to perform face swapping. When you launch the app, open the **Models** tab to download them, or run `python download_models.py`. Face swapping will remain disabled until these are downloaded.
+> **Pre-trained models required.** Deep Face Net needs model weights for face swapping. When you launch the app, go to the **Models** tab to download them, or run `python download_models.py`. Face swapping won't work until these are downloaded.
 
-#### Build Your Own Binaries (Recommended)
+### Run from Source (Recommended, Full GPU Support)
+
+This project doesn't ship pre-built binaries. To get an AppImage, Windows installer, or macOS DMG with GPU support, build them yourself using the scripts below on a machine that has the right NVIDIA drivers installed.
+
+#### Build Your Own Binaries
 
 - **Linux AppImage:**  
   ```bash
   chmod +x scripts/build_linux_appimage.sh
   ./scripts/build_linux_appimage.sh
   ```
-  The script creates `dist/DeepFaceNet-x86_64.AppImage`.
+  Creates `dist/DeepFaceNet-x86_64.AppImage`.
 
 - **Windows Executable:**  
   ```powershell
   python scripts/build_executable.py
   ```
-  The resulting `.exe` will be placed in `dist/`.
+  Output goes to `dist/`.
 
 - **macOS DMG:**  
   ```bash
   chmod +x scripts/build_mac_dmg.sh
   ./scripts/build_mac_dmg.sh
   ```
-  The DMG appears in `dist/`.
+  Output goes to `dist/`.
 
-> Ensure you have the appropriate NVIDIA driver and CUDA toolkit installed on the host machine before running these scripts to enable GPU acceleration. If CUDA is not present, the builds will fall back to CPU‑only execution.
+> Make sure you have the NVIDIA driver and CUDA toolkit installed before running these scripts if you want GPU acceleration. Without CUDA, the builds will be CPU-only.
 
 #### 1. Clone the Repository
 
@@ -99,7 +100,7 @@ pip install -r requirements.txt
 ```
 
 > [!TIP]
-> `onnxruntime-gpu` is installed by default and automatically utilizes NVIDIA CUDA when available, seamlessly falling back to CPU execution if no compatible GPU is detected.
+> `onnxruntime-gpu` is included in the requirements. It uses NVIDIA CUDA automatically when available and falls back to CPU if no compatible GPU is found.
 
 #### 4. Download Models
 
@@ -153,8 +154,9 @@ python run.py
 #### Offline Processing Tab
 1. Select a source face image
 2. Drag & drop or browse for a target video/image
-3. Click "Start Processing"
-4. Wait for completion and view/open the result
+3. If there are multiple faces in the target, you can pick which ones to swap
+4. Click "Start Processing"
+5. Wait for it to finish and view the result
 
 ### CLI Mode
 
