@@ -48,8 +48,16 @@ def build_executable(obfuscate=False, clean=True):
         "--hidden-import=cv2",
         "--hidden-import=insightface",
         "--hidden-import=PyQt6",
-        "--collect-all=onnxruntime",   # bundles CUDA provider .so files
+        "--collect-all=onnxruntime",   # bundles CUDA provider .so files incl. CUDA provider libs
         "--collect-all=insightface",   # bundles all insightface data/models
+        "--exclude-module=torch",      # torch not used - saves ~2GB
+        "--exclude-module=torchvision",
+        "--exclude-module=torchaudio",
+        "--exclude-module=triton",
+        "--exclude-module=matplotlib",
+        "--exclude-module=IPython",
+        "--exclude-module=jedi",
+        "--exclude-module=tkinter",
         entrypoint
     ]
     
