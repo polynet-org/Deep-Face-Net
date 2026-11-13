@@ -48,7 +48,8 @@ cat > "$APP_DIR/AppRun" << 'EOF'
 #!/bin/bash
 HERE="$(dirname "$(readlink -f "${0}")")"
 export PATH="${HERE}/usr/bin:${PATH}"
-export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
+# Include bundled libs AND host CUDA paths so onnxruntime-gpu can find CUDA/cuDNN
+export LD_LIBRARY_PATH="${HERE}/usr/lib:/usr/local/cuda/lib64:/usr/lib/x86_64-linux-gnu:${LD_LIBRARY_PATH}"
 exec "${HERE}/usr/bin/DeepFaceNet" "$@"
 EOF
 

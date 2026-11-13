@@ -44,9 +44,12 @@ def build_executable(obfuscate=False, clean=True):
         "--name=DeepFaceNet",
         assets_arg,
         "--hidden-import=onnxruntime",
+        "--hidden-import=onnxruntime.capi._pybind_state",
         "--hidden-import=cv2",
         "--hidden-import=insightface",
         "--hidden-import=PyQt6",
+        "--collect-all=onnxruntime",   # bundles CUDA provider .so files
+        "--collect-all=insightface",   # bundles all insightface data/models
         entrypoint
     ]
     
