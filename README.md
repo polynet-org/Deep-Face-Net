@@ -49,26 +49,34 @@
 ## Installation
 
 > [!IMPORTANT]
-> **Pre-Trained AI Models Required**:
-> Deep Face Net needs model weights to perform face swapping (`inswapper_128.onnx` and `buffalo_l`). Due to file size limits, they are not bundled in the download.
->
-> When you launch the app, open the **Models** tab to download them with one click, or run `python download_models.py` in your terminal. Face swapping will remain disabled until these models are downloaded.
+> **GPU support requires running from source.** For the best performance with NVIDIA GPU acceleration, follow the **Run from Source** instructions below. Pre-built releases run on CPU only.
 
-### Standalone Apps (No Python Setup Needed)
+> [!NOTE]
+> **Pre-Trained AI Models Required**: Deep Face Net needs model weights to perform face swapping. When you launch the app, open the **Models** tab to download them, or run `python download_models.py`. Face swapping will remain disabled until these are downloaded.
 
-Grab the ready-to-use version for your operating system from the [Releases](https://github.com/polynet-org/Deep-Face-Net/releases) page:
+#### Build Your Own Binaries (Recommended)
 
-* **Linux**: Download `DeepFaceNet-x86_64.AppImage`, make it executable, and run:
+- **Linux AppImage:**  
   ```bash
-  chmod +x DeepFaceNet-x86_64.AppImage
-  ./DeepFaceNet-x86_64.AppImage
+  chmod +x scripts/build_linux_appimage.sh
+  ./scripts/build_linux_appimage.sh
   ```
-* **Windows**: Download `DeepFaceNet_Setup.exe` and follow the install wizard.
-* **macOS**: Download `DeepFaceNet.dmg`, open it, and drag DeepFaceNet into your Applications folder.
+  The script creates `dist/DeepFaceNet-x86_64.AppImage`.
 
----
+- **Windows Executable:**  
+  ```powershell
+  python scripts/build_executable.py
+  ```
+  The resulting `.exe` will be placed in `dist/`.
 
-### Run from Source
+- **macOS DMG:**  
+  ```bash
+  chmod +x scripts/build_mac_dmg.sh
+  ./scripts/build_mac_dmg.sh
+  ```
+  The DMG appears in `dist/`.
+
+> Ensure you have the appropriate NVIDIA driver and CUDA toolkit installed on the host machine before running these scripts to enable GPU acceleration. If CUDA is not present, the builds will fall back to CPU‑only execution.
 
 #### 1. Clone the Repository
 
