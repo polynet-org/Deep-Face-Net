@@ -1,0 +1,174 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Distribution / packaging
+.Python
+eggs/
+.eggs/
+*.egg-info/
+build/
+dist/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Models
+models/*
+!models/README.md
+
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+output/
+results/
+temp/
+tmp/
+
+# User settings
+.deepfacenet_settings.json
+
+# Testing files (keep directory structure)
+testing/
+
+# Assets (if you want to exclude large files)
+assets/*.mp4
+assets/*.avi
+
+# Cloned dependency folders (GFPGAN, BasicSR cloned locally)
+gfpgan/
+GFPGAN/
+BasicSR/
+basicsr/
+
+# Model weight files anywhere in the tree
+*.pth
+*.pt
+*.pkl
+*.safetensors
+*.onnx
+*.engine
+*.bin
+*.weights
+*.tflite
+
+# Standalone installers, AppImages and packaging tools
+*.AppImage
+appimagetool*
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.exe
+*.msi
+
+# Temporary and session files
+*.ses
+:memory:*
+*.session
+Thumbs.db
+.directory
+
