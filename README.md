@@ -48,14 +48,17 @@
 
 ## Installation
 
-### Quick Start (Linux Standalone AppImage — No Python Required)
+### Standalone Apps (No Python Setup Needed)
 
-Download the pre-built `DeepFaceNet-x86_64.AppImage` from [GitHub Releases](https://github.com/polynet-org/Deep-Face-Net/releases):
+Grab the ready-to-use version for your operating system from the [Releases](https://github.com/polynet-org/Deep-Face-Net/releases) page:
 
-```bash
-chmod +x DeepFaceNet-x86_64.AppImage
-./DeepFaceNet-x86_64.AppImage
-```
+* **Linux**: Download `DeepFaceNet-x86_64.AppImage`, make it executable, and run:
+  ```bash
+  chmod +x DeepFaceNet-x86_64.AppImage
+  ./DeepFaceNet-x86_64.AppImage
+  ```
+* **Windows**: Download `DeepFaceNet_Setup.exe` and follow the install wizard.
+* **macOS**: Download `DeepFaceNet.dmg`, open it, and drag DeepFaceNet into your Applications folder.
 
 ---
 
@@ -178,7 +181,7 @@ python run.py --source face.jpg --target video.mp4 --output result.mp4 --mode sw
 - `--output, -o`: Path to output file
 - `--webcam`: Use webcam for live face swapping
 - `--camera-index`: Camera index for webcam mode (default: 0)
-- `--mode`: Processing mode — `swap` (default), `enhance` (no source needed), `swap_enhance`
+- `--mode`: Processing mode (`swap` by default, `enhance`, or `swap_enhance`)
 - `--fps`: Target FPS for video processing (default: 30)
 
 ---
