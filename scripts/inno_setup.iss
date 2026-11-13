@@ -4,7 +4,7 @@
 #define MyAppName "Deep Face Net"
 #define MyAppVersion "2.0.0"
 #define MyAppPublisher "PolyNet"
-#define MyAppURL "https://github.com/MIDHUNGRAJ/Deep-Face-Net"
+#define MyAppURL "https://github.com/polynet-org/Deep-Face-Net"
 #define MyAppExeName "DeepFaceNet.exe"
 
 [Setup]
