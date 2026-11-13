@@ -1,23 +1,58 @@
 from pathlib import Path
 from typing import Literal, List
+import os
+import sys
 
 # ---------------- Paths ----------------
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-MODELS_DIR = BASE_DIR / "models"
+
+def _resolve_models_dir() -> Path:
+    # 1. Custom environment variable override if set
+    if "DEEPFACENET_MODELS_DIR" in os.environ:
+        p = Path(os.environ["DEEPFACENET_MODELS_DIR"])
+        p.mkdir(parents=True, exist_ok=True)
+        return p
+
+    # 2. If running from local source checkout and local ./models is writable, use it
+    if not getattr(sys, "frozen", False):
+        local_dir = BASE_DIR / "models"
+        try:
+            local_dir.mkdir(parents=True, exist_ok=True)
+            test_file = local_dir / ".write_test"
+            test_file.touch()
+            test_file.unlink()
+            return local_dir
+        except (OSError, PermissionError):
+            pass
+
+    # 3. For AppImage, Windows Program Files, macOS bundle, or any read-only location:
+    # Use persistent user-writable application data directory: ~/.deepfacenet/models
+    user_models_dir = Path.home() / ".deepfacenet" / "models"
+    user_models_dir.mkdir(parents=True, exist_ok=True)
+    return user_models_dir
+
+MODELS_DIR = _resolve_models_dir()
+
+def _resolve_model_path(filename: str) -> Path:
+    """Find model in local directory if present, otherwise in user MODELS_DIR."""
+    local_file = BASE_DIR / "models" / filename
+    if local_file.exists():
+        return local_file
+    return MODELS_DIR / filename
 
 ANALYSIS_MODEL = "buffalo_l"
 
 # Use the standard swapper on CPU and CUDA. The bundled FP16 conversion
 # does not preserve source identity reliably and must not be auto-selected.
-SWAPPER_MODEL      = MODELS_DIR / "inswapper_128.onnx"
-SWAPPER_MODEL_FP16 = MODELS_DIR / "inswapper_128.fp16.onnx"
+SWAPPER_MODEL      = _resolve_model_path("inswapper_128.onnx")
+SWAPPER_MODEL_FP16 = _resolve_model_path("inswapper_128.fp16.onnx")
 
 # Enhancer models
-ENHANCER_MODEL     = MODELS_DIR / "GFPGANv1.4.onnx"    # legacy default
-GFPGAN_1024_MODEL  = MODELS_DIR / "gfpgan-1024.onnx"   # higher quality
-GPEN_256_MODEL     = MODELS_DIR / "GPEN-BFR-256.onnx"
-GPEN_512_MODEL     = MODELS_DIR / "GPEN-BFR-512.onnx"
+ENHANCER_MODEL     = _resolve_model_path("GFPGANv1.4.onnx")    # legacy default
+GFPGAN_1024_MODEL  = _resolve_model_path("gfpgan-1024.onnx")   # higher quality
+GPEN_256_MODEL     = _resolve_model_path("GPEN-BFR-256.onnx")
+GPEN_512_MODEL     = _resolve_model_path("GPEN-BFR-512.onnx")
 
 ENHANCE_WEIGHT = 0.6  # blend strength: 0 = full enhancer, 1 = original face
 

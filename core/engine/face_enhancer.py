@@ -31,8 +31,7 @@ def get_face_enhancer() -> onnxruntime.InferenceSession:
                 model_path = str(config.ENHANCER_MODEL)
                 
             if not Path(model_path).exists():
-                raise FileNotFoundError(f"GFPGAN ONNX Model not found. Checked {config.GFPGAN_1024_MODEL} and {config.ENHANCER_MODEL}")
-                raise FileNotFoundError(f"ONNX Model not found at {model_path}")
+                raise FileNotFoundError(f"GFPGAN ONNX Model not found at {model_path}")
             
             providers = getattr(config, "EXECUTION_PROVIDERS", ['CUDAExecutionProvider', 'CPUExecutionProvider'])
             session_options = onnxruntime.SessionOptions()

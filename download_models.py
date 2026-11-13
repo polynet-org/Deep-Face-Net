@@ -88,7 +88,12 @@ def get_model_path(model_name):
     if info["location"] == "insightface":
         return Path.home() / ".insightface" / "models" / model_name
     else:
-        base = config.MODELS_DIR if CONFIG_LOADED else Path("models")
+        # Check if model already exists in local source folder
+        if CONFIG_LOADED and hasattr(config, "BASE_DIR"):
+            local_p = config.BASE_DIR / "models" / model_name
+            if local_p.exists():
+                return local_p
+        base = config.MODELS_DIR if CONFIG_LOADED else (Path.home() / ".deepfacenet" / "models")
         return base / model_name
 
 
@@ -108,8 +113,12 @@ def check_model_status(model_name):
             return True, path, total_size
         return False, path, 0
     else:
-        if path.exists():
+        if path and path.exists():
             return True, path, path.stat().st_size
+        if CONFIG_LOADED and hasattr(config, "BASE_DIR"):
+            fallback = config.BASE_DIR / "models" / model_name
+            if fallback.exists():
+                return True, fallback, fallback.stat().st_size
         return False, path, 0
 
 
@@ -129,13 +138,19 @@ def download_file(url, filename, expected_size=None):
         print(f"Skipping {filename}: No download URL available.")
         return
 
-    local_path = os.path.join("models", filename)
+    local_path = get_model_path(filename)
+    if not local_path:
+        base = config.MODELS_DIR if CONFIG_LOADED else (Path.home() / ".deepfacenet" / "models")
+        local_path = base / filename
 
-    if os.path.exists(local_path):
+    local_path.parent.mkdir(parents=True, exist_ok=True)
+    local_path_str = str(local_path)
+
+    if local_path.exists():
         # Check size if available
         if expected_size:
-            local_size = os.path.getsize(local_path)
-            # Allow some tolerance for size mismatch (e.g. 1%)
+            local_size = local_path.stat().st_size
+            # Allow some tolerance for size mismatch (e.g. 5%)
             if abs(local_size - expected_size) / expected_size < 0.05:
                 print(f"{filename} already exists and size matches. Skipping.")
                 return
@@ -147,7 +162,7 @@ def download_file(url, filename, expected_size=None):
             print(f"{filename} already exists. Skipping.")
             return
 
-    print(f"Downloading {filename}...")
+    print(f"Downloading {filename} to {local_path_str}...")
     try:
         response = requests.get(url, stream=True)
         response.raise_for_status()
@@ -156,7 +171,7 @@ def download_file(url, filename, expected_size=None):
         block_size = 1024  # 1 Kibibyte
 
         with (
-            open(local_path, "wb") as f,
+            open(local_path_str, "wb") as f,
             tqdm(
                 desc=filename,
                 total=total_size,
@@ -170,8 +185,8 @@ def download_file(url, filename, expected_size=None):
                 bar.update(size)
     except Exception as e:
         print(f"Failed to download {filename}: {e}")
-        if os.path.exists(local_path):
-            os.remove(local_path)
+        if local_path.exists():
+            local_path.unlink()
 
 def conditional_download(target_dir, urls):
     """Download multiple URLs into target_dir if they differ in name."""
@@ -232,9 +247,9 @@ def main():
             print(f" - {m}")
         return
 
-    if not os.path.exists("models"):
-        os.makedirs("models")
-        print("Created models/ directory.")
+    models_dir = config.MODELS_DIR if CONFIG_LOADED else (Path.home() / ".deepfacenet" / "models")
+    models_dir.mkdir(parents=True, exist_ok=True)
+    print(f"Models directory: {models_dir}")
 
     models_to_download = get_required_models(args)
 
