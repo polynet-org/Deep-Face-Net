@@ -28,7 +28,7 @@ setup(
     description="A professional real-time face swapping application with GUI and CLI support",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MIDHUNGRAJ/Deep-Face-Net",
+    url="https://github.com/polynet-org/Deep-Face-Net",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

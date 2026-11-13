@@ -48,33 +48,45 @@
 
 ## Installation
 
-### 1. Clone the Repository
+### Quick Start (Linux Standalone AppImage — No Python Required)
+
+Download the pre-built `DeepFaceNet-x86_64.AppImage` from [GitHub Releases](https://github.com/polynet-org/Deep-Face-Net/releases):
 
 ```bash
-git clone https://github.com/MIDHUNGRAJ/Deep-Face-Net.git
+chmod +x DeepFaceNet-x86_64.AppImage
+./DeepFaceNet-x86_64.AppImage
+```
+
+---
+
+### Run from Source
+
+#### 1. Clone the Repository
+
+```bash
+git clone https://github.com/polynet-org/Deep-Face-Net.git
 cd Deep-Face-Net
 ```
 
-### 2. Create Virtual Environment (Recommended)
+#### 2. Create Virtual Environment (Recommended)
 
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+#### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
 > [!TIP]
-> For **GPU acceleration**, install `onnxruntime-gpu` instead of `onnxruntime`.
-> If you're on **CUDA 13** (common on Arch Linux / CachyOS), see the [Troubleshooting](#-troubleshooting) section below.
+> `onnxruntime-gpu` is installed by default and automatically utilizes NVIDIA CUDA when available, seamlessly falling back to CPU execution if no compatible GPU is detected.
 
-### 4. Download Models
+#### 4. Download Models
 
-The application requires several pre-trained models to function. Due to their large size, they are not included in the git repository.
+The application requires pre-trained models to function. Due to their size, they are not included in the git repository.
 
 You can **automatically download** all required models using the included script:
 
@@ -84,11 +96,11 @@ python download_models.py
 
 This will download:
 - **InSwapper 128** (Face Swapping)
-- **GFPGAN** (Face Enhancement)
+- **GFPGAN** (Face Enhancement, ONNX)
 
 If the automated download fails, please refer to [models/README.md](models/README.md) for manual download links.
 
-### 5. Optional: Virtual Camera Support
+#### 5. Optional: Virtual Camera Support
 
 For virtual camera output (to use with OBS, Zoom, etc.):
 
@@ -180,50 +192,6 @@ Settings are stored in `core/config.py`:
 - **Face Detection**: Detection size and confidence threshold
 
 User preferences (working directory, etc.) are saved in `~/.deepfacenet_settings.json`
-
----
-
-## Troubleshooting
-
-### GPU / CUDA 13 Support
-
-The default `onnxruntime-gpu` package on PyPI may not support **CUDA 13** yet. If face swapping fails or falls back to CPU on systems running CUDA 13 (e.g., **Arch Linux / CachyOS**), install the nightly build instead:
-
-```bash
-# Install required dependencies
-pip install coloredlogs flatbuffers numpy packaging protobuf sympy
-
-# Install onnxruntime-gpu nightly with CUDA 13 support
-pip install --pre --index-url https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/ort-cuda-13-nightly/pypi/simple/ onnxruntime-gpu
-```
-
----
-
-### BasicSR / GFPGAN Installation Issues
-
-`gfpgan` requires **BasicSR**, which can fail to build from PyPI on many systems (missing headers, PEP 517 errors, CUDA mismatch). The recommended approach is to clone both from source.
-
-**Step 1 — Install BasicSR from the maintained fork** (fixes common build failures):
-
-```bash
-git clone https://github.com/MIDHUNGRAJ/BasicSR.git
-cd BasicSR
-pip install -e .
-```
-
-> This fork uses `pyproject.toml` instead of the legacy `setup.py`, avoiding most build errors.
-
-**Step 2 — Install GFPGAN from source:**
-
-```bash
-git clone https://github.com/TencentARC/GFPGAN.git
-cd GFPGAN
-pip install facexlib
-pip install -r requirements.txt
-python setup.py develop
-```
-
-After this, GFPGAN will be available system-wide and the Enhance modes in Deep Face Net will work correctly.
 
 ---
 
