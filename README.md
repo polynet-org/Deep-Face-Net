@@ -48,6 +48,12 @@
 
 ## Installation
 
+> [!IMPORTANT]
+> **Pre-Trained AI Models Required**:
+> Deep Face Net needs model weights to perform face swapping (`inswapper_128.onnx` and `buffalo_l`). Due to file size limits, they are not bundled in the download.
+>
+> When you launch the app, open the **Models** tab to download them with one click, or run `python download_models.py` in your terminal. Face swapping will remain disabled until these models are downloaded.
+
 ### Standalone Apps (No Python Setup Needed)
 
 Grab the ready-to-use version for your operating system from the [Releases](https://github.com/polynet-org/Deep-Face-Net/releases) page:

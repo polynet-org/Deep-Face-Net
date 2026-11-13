@@ -53,7 +53,7 @@ from PyQt6.QtCore import (
     PYQT_VERSION_STR,
     qVersion,
 )
-from PyQt6.QtGui import QImage, QPixmap, QFont, QDesktopServices, QIcon
+from PyQt6.QtGui import QImage, QPixmap, QFont, QDesktopServices, QIcon, QColor
 
 from app.video_thread import VideoThread
 from app.drag_drop_widget import DragDropWidget
@@ -316,7 +316,6 @@ class DeepfakeApp(QMainWindow):
         self.models_tab = QWidget()
         self.setup_models_tab()
         self.models_tab_index = self.tabs.addTab(self.models_tab, "Models")
-        self.check_models_on_startup()
 
         # Tab 4: About
         self.about_tab = QWidget()
@@ -332,6 +331,9 @@ class DeepfakeApp(QMainWindow):
         self.status_bar.addWidget(self.status_label, stretch=1)
         self.status_bar.addPermanentWidget(self.face_count_label)
         self.status_bar.addPermanentWidget(self.fps_label)
+
+        # Check required models after status bar is initialized
+        self.check_models_on_startup()
 
         # Add Settings button to status bar
         settings_btn = QPushButton("⚙ Settings")
@@ -1045,11 +1047,14 @@ class DeepfakeApp(QMainWindow):
                     missing_required.append(model_name)
 
         if missing_required:
-            self.tabs.setTabText(self.models_tab_index, "[!] Models")
+            self.tabs.setTabText(self.models_tab_index, "⚠️ Models (Download Required)")
             self.tabs.tabBar().setTabTextColor(
                 self.models_tab_index,
-                self.tabs.tabBar().tabTextColor(self.models_tab_index),
+                QColor("#FF9800"),
             )
+            if hasattr(self, "status_label"):
+                self.status_label.setText("⚠️ Warning: Required AI models are missing. Face swapping will not work until downloaded from the Models tab.")
+                self.status_label.setStyleSheet("color: #FF9800; font-weight: bold;")
 
     def start_model_download(self, model_name):
         """Start downloading a model in the background"""
@@ -1898,9 +1903,37 @@ class DeepfakeApp(QMainWindow):
         if self.video_thread is not None:
             current_state = self.video_thread.swap_enabled
             new_state = not current_state
-            self.video_thread.enable_swap(new_state)
 
             if new_state:
+                # Validate required models before enabling face swap
+                from core.config import SWAPPER_MODEL, ANALYSIS_MODEL
+                from download_models import check_model_status
+
+                analyser_ok, _, _ = check_model_status(ANALYSIS_MODEL)
+                swapper_ok = SWAPPER_MODEL.exists()
+
+                if not swapper_ok or not analyser_ok:
+                    missing = []
+                    if not swapper_ok:
+                        missing.append("Face Swap Model (inswapper_128.onnx)")
+                    if not analyser_ok:
+                        missing.append("Face Detection Model Pack (buffalo_l)")
+
+                    reply = QMessageBox.warning(
+                        self,
+                        "Models Required",
+                        "Face swapping cannot function without required AI models:\n\n"
+                        + "\n".join(f"• {m}" for m in missing)
+                        + "\n\nFace swap is disabled until these are downloaded.\n"
+                        + "Would you like to open the Models tab to download them now?",
+                        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                        QMessageBox.StandardButton.Yes,
+                    )
+                    if reply == QMessageBox.StandardButton.Yes:
+                        self.tabs.setCurrentIndex(self.models_tab_index)
+                    return
+
+                self.video_thread.enable_swap(True)
                 self.swap_btn.setText("Disable Face Swap")
                 self.swap_btn.setStyleSheet("background-color: #FF9800;")
                 self.status_label.setText("Face swapping enabled")
@@ -2249,6 +2282,34 @@ class DeepfakeApp(QMainWindow):
 
         if not self.target_file_path:
             return
+
+        # Guard: Swapper and Analyser models must exist for face swapping
+        if mode in (MODE_SWAP, MODE_SWAP_ENHANCE):
+            from core.config import SWAPPER_MODEL, ANALYSIS_MODEL
+            from download_models import check_model_status
+
+            analyser_ok, _, _ = check_model_status(ANALYSIS_MODEL)
+            swapper_ok = SWAPPER_MODEL.exists()
+
+            if not swapper_ok or not analyser_ok:
+                missing = []
+                if not swapper_ok:
+                    missing.append("Face Swap Model (inswapper_128.onnx)")
+                if not analyser_ok:
+                    missing.append("Face Detection Model Pack (buffalo_l)")
+
+                reply = QMessageBox.warning(
+                    self,
+                    "Models Required",
+                    "Offline face swapping cannot perform without required AI models:\n\n"
+                    + "\n".join(f"• {m}" for m in missing)
+                    + "\n\nWould you like to open the Models tab to download them now?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.Yes,
+                )
+                if reply == QMessageBox.StandardButton.Yes:
+                    self.tabs.setCurrentIndex(self.models_tab_index)
+                return
 
         # Guard: GFPGAN model must exist for enhance modes
         if mode in (MODE_ENHANCE, MODE_SWAP_ENHANCE) and not ENHANCER_MODEL.exists():
